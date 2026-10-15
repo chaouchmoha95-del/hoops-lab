@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hoops Lab — Drills, matchups & sessions</title>
+  <meta name="description" content="Bibliothèque de drills de basket, matchups contre chaque type de défenseur, sessions d'entraînement et suivi des scores de tir.">
+  <script>try{var t=localStorage.getItem("hoops-theme");if(t==="ice")document.documentElement.setAttribute("data-theme","ice")}catch(e){}</script>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <a class="skip" href="#main">Aller au contenu</a>
+  <header class="topbar">
+    <div class="topbar-row shell">
+      <a class="brand" href="#drills">
+        <svg class="brand-ball" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="13" stroke="currentColor" stroke-width="2.4" fill="none"/><path d="M16 3v26M3 16h26" stroke="currentColor" stroke-width="2"/></svg>
+        <span class="brand-text"><span class="brand-name">Hoops Lab</span><span class="brand-sub">Drills · Matchups · Sessions</span></span>
+      </a>
+      <button class="theme-btn" id="theme-btn" type="button" aria-label="Changer de thème de couleur">Thème : <span id="theme-name">Orange</span></button>
+    </div>
+    <nav class="tabs shell" id="tabs" aria-label="Sections">
+      <a class="tab" href="#drills" data-view="drills">Drills <span class="count" id="c-drills"></span></a>
+      <a class="tab" href="#matchups" data-view="matchups">Matchups <span class="count" id="c-matchups"></span></a>
+      <a class="tab" href="#sessions" data-view="sessions">Sessions <span class="count" id="c-sessions"></span></a>
+      <a class="tab" href="#tracker" data-view="tracker">Scores <span class="count" id="c-tracker"></span></a>
+    </nav>
+  </header>
+
+  <main id="main" class="shell" tabindex="-1">
+    <section id="view-drills" hidden>
+      <div class="head">
+        <div>
+          <h1 class="title">Drills</h1>
+          <p class="coverage" id="drills-cov"></p>
+        </div>
+        <div class="controls">
+          <label class="sr-only" for="search">Rechercher un drill</label>
+          <input type="search" id="search" class="search" placeholder="Rechercher un drill…" autocomplete="off">
+        </div>
+      </div>
+      <div class="filters" id="cat-filters" role="group" aria-label="Catégorie"></div>
+      <div class="filters" id="lvl-filters" role="group" aria-label="Niveau"></div>
+      <div class="grid" id="drill-grid"></div>
+      <p class="no-results" id="no-drills" hidden>Aucun drill ne correspond.</p>
+    </section>
+
+    <section id="view-matchups" hidden>
+      <div class="head"><div>
+        <h1 class="title">Matchups</h1>
+        <p class="coverage">Choisis le type de défenseur que tu vas affronter.</p>
+      </div></div>
+      <div class="grid grid-wide" id="matchup-grid"></div>
+    </section>
+
+    <section id="view-sessions" hidden>
+      <div class="head"><div>
+        <h1 class="title">Sessions</h1>
+        <p class="coverage">Coche chaque bloc au fur et à mesure. Ta progression est sauvegardée sur cet appareil.</p>
+      </div></div>
+      <div class="cards" id="session-list"></div>
+    </section>
+
+    <section id="view-tracker" hidden>
+      <div class="head"><div>
+        <h1 class="title">Scores de tir</h1>
+        <p class="coverage">Note tes tirs réussis et tentés par zone après chaque session.</p>
+      </div></div>
+      <div class="tracker-layout">
+        <form class="tform" id="shot-form" novalidate>
+          <div class="field"><label for="shot-date">Date</label><input type="date" id="shot-date" required></div>
+          <div class="spots" id="spot-fields"></div>
+          <p class="form-error" id="shot-error" role="alert" hidden></p>
+          <button class="primary" type="submit">Enregistrer la session</button>
+        </form>
+        <div>
+          <h2 class="sub-title">Pourcentages cumulés</h2>
+          <div class="stats" id="shot-stats"></div>
+          <h2 class="sub-title">Historique</h2>
+          <ul class="history" id="shot-history"></ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel" aria-labelledby="panel-title" hidden>
+      <div class="panel-head">
+        <div>
+          <h2 class="panel-title" id="panel-title" tabindex="-1"></h2>
+          <p class="panel-sub" id="panel-sub"></p>
+        </div>
+        <button class="panel-close" id="panel-close" type="button" aria-label="Fermer">✕</button>
+      </div>
+      <div class="panel-body" id="panel-body"></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="shell footer-inner">
+      <p>Échauffe-toi avant chaque session et entraîne-toi régulièrement.</p>
+      <button class="reset" id="reset" type="button">Réinitialiser mes données</button>
+    </div>
+  </footer>
+  <noscript><p class="noscript">Ce site a besoin de JavaScript pour afficher les drills.</p></noscript>
+  <script src="assets/data.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>
