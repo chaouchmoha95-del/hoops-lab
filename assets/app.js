@@ -1,6 +1,7 @@
 (function(){
 "use strict";
 var D = window.HOOPS, $ = function(id){return document.getElementById(id)};
+var VID = window.HOOPS_VIDEOS || {};
 var state = {cat:"all", lvl:0, q:""};
 var PROG = "hoops-progress-v1", SHOTS = "hoops-shots-v1";
 var SPOTS = ["Coin gauche","Aile gauche","Axe (haut de la raquette)","Aile droite","Coin droit","Lancers francs"];
@@ -15,6 +16,18 @@ var mById = {}; D.matchups.forEach(function(m){mById[m.id]=m});
 function lvlBadge(n){ return '<span class="lvl lvl-'+n+'">'+esc(D.levels[n])+'</span>'; }
 function lvlText(t){ return '<span class="lvl lvl-'+norm(t)+'">'+esc(t)+'</span>'; }
 function reduced(){ return matchMedia("(prefers-reduced-motion: reduce)").matches; }
+
+var ICON = {
+  tir:'<path d="M3 20C5 9 10 5 17 8"/><path d="M15 12h7M16 12l1 4M21 12l-1 4M18.5 12v4"/><circle cx="17" cy="7.5" r="1.6"/>',
+  dribble:'<circle cx="12" cy="6.5" r="3.5"/><path d="M12 10v7M8 21h8M9 17l3 4 3-4"/>',
+  finition:'<path d="M5 3h14v8H5z"/><path d="M9 11l1 5M15 11l-1 5M12 11v5"/><circle cx="12" cy="20" r="2"/>',
+  defense:'<path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6z"/>',
+  physique:'<path d="M13 3L5 14h6l-1 7 8-11h-6z"/>'
+};
+function icon(cat){
+  return '<span class="tile-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+(ICON[cat]||"")+'</svg>'+
+    '<img class="ico-img" src="assets/img/'+cat+'.png" alt="" loading="lazy" decoding="async" onerror="this.remove()"></span>';
+}
 
 function renderFilters(){
   var c = '<button type="button" class="fchip" data-cat="all" aria-pressed="'+(state.cat==="all")+'">Toutes</button>';
@@ -37,10 +50,9 @@ function renderDrills(sel){
   var list = filtered();
   $("drill-grid").innerHTML = list.map(function(d){
     return '<a class="tile'+(d.id===sel?' selected':'')+'" href="#drills/'+d.id+'" '+(d.id===sel?'aria-current="true"':'')+'>'+
-      '<span class="chips"><span class="chip cat">'+esc(catName[d.cat])+'</span>'+lvlBadge(d.level)+'</span>'+
+      '<span class="tile-top">'+icon(d.cat)+'<span class="chip cat">'+esc(catName[d.cat])+'</span></span>'+
       '<span class="tile-name">'+esc(d.name)+'</span>'+
-      '<span class="tile-desc">'+esc(d.desc)+'</span>'+
-      '<span class="chips"><span class="chip">'+d.min+' min</span></span></a>';
+      '<span class="chips">'+lvlBadge(d.level)+'<span class="chip">'+d.min+' min</span></span></a>';
   }).join("");
   $("no-drills").hidden = list.length>0;
   $("drills-cov").innerHTML = '<strong>'+list.length+'</strong> drill'+(list.length>1?'s':'')+' sur '+D.drills.length;
@@ -75,14 +87,21 @@ function renderSessions(){
 function listHtml(arr, cls){ return '<ul class="notes '+(cls||'')+'">'+arr.map(function(x){return '<li>'+esc(x)+'</li>'}).join("")+'</ul>'; }
 var YT_ICON='<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M23 7.2s-.2-1.6-.9-2.3c-.9-.9-1.9-.9-2.4-1C16.6 3.6 12 3.6 12 3.6s-4.6 0-7.7.3c-.5.1-1.5.1-2.4 1-.7.7-.9 2.3-.9 2.3S.8 9.1.8 11v1.8c0 1.9.2 3.8.2 3.8s.2 1.6.9 2.3c.9.9 2 .9 2.5 1 1.8.2 7.6.3 7.6.3s4.6 0 7.7-.4c.5-.1 1.5-.1 2.4-1 .7-.7.9-2.3.9-2.3s.2-1.9.2-3.8V11c0-1.9-.2-3.8-.2-3.8zM9.7 14.9V8.5l6.3 3.2-6.3 3.2z"/></svg>';
 function videoBlock(d){
-  var h = '<div class="block"><h3>Vidéo</h3>';
-  if(d.video && /^[A-Za-z0-9_-]{11}$/.test(d.video)){
-    h += '<div class="video-frame"><iframe src="https://www.youtube-nocookie.com/embed/'+d.video+'" title="Vidéo : '+esc(d.name)+'" loading="lazy" allow="encrypted-media; picture-in-picture" allowfullscreen referrerpolicy="no-referrer"></iframe></div>';
+  var id = VID[d.id] || d.video, h = '<div class="block"><h3>Vidéo</h3>';
+  if(id && /^[A-Za-z0-9_-]{11}$/.test(id)){
+    h += '<div class="lite" data-yt="'+id+'" data-title="'+esc(d.name)+'">'+
+      '<button type="button" class="lite-btn" aria-label="Lire la vidéo : '+esc(d.name)+'" style="background-image:url(https://i.ytimg.com/vi/'+id+'/hqdefault.jpg)"><span class="lite-play" aria-hidden="true"></span></button></div>'+
+      '<a class="yt-open" href="https://www.youtube.com/watch?v='+id+'" target="_blank" rel="noopener noreferrer">'+YT_ICON+'<span>Ouvrir sur YouTube</span></a>';
   } else {
     var q = encodeURIComponent((d.yt||d.name)+" basketball drill");
-    h += '<a class="yt-search" href="https://www.youtube.com/results?search_query='+q+'" target="_blank" rel="noopener noreferrer">'+YT_ICON+'<span>Chercher des vidéos sur YouTube</span></a>';
+    h += '<a class="yt-open" href="https://www.youtube.com/results?search_query='+q+'" target="_blank" rel="noopener noreferrer">'+YT_ICON+'<span>Chercher des vidéos sur YouTube</span></a>';
   }
   return h+'</div>';
+}
+function tips(d){
+  return '<ul class="tips">'+
+    d.points.map(function(p){return '<li class="ok"><span class="sr-only">À faire : </span>'+esc(p)+'</li>'}).join("")+
+    d.errors.map(function(e){return '<li class="no"><span class="sr-only">Erreur : </span>'+esc(e)+'</li>'}).join("")+'</ul>';
 }
 function openDrill(id){
   var d = byId[id]; if(!d) return closePanel();
@@ -90,11 +109,10 @@ function openDrill(id){
   $("panel-sub").textContent = catName[d.cat]+' · '+D.levels[d.level]+' · '+d.min+' min · '+d.reps;
   var rel = D.matchups.filter(function(m){return m.drills.indexOf(id)>=0}).map(function(m){return '<a class="link-drill" href="#matchups/'+m.id+'">'+esc(m.short)+'</a>'}).join("");
   $("panel-body").innerHTML =
-    '<div><div class="block"><h3>Description</h3><p>'+esc(d.desc)+'</p></div>'+
+    '<div><p class="lead">'+esc(d.desc)+'</p>'+videoBlock(d)+
     '<div class="block"><h3>Étapes</h3><ol class="steps">'+d.steps.map(function(s){return '<li>'+esc(s)+'</li>'}).join("")+'</ol></div></div>'+
-    '<div><div class="block"><h3>Points clés</h3>'+listHtml(d.points)+'</div>'+
-    '<div class="block"><h3>Erreurs fréquentes</h3>'+listHtml(d.errors,"bad")+'</div>'+
-    videoBlock(d)+
+    '<div><img class="cover" src="assets/img/'+d.cat+'.png" alt="" loading="lazy" decoding="async" onerror="this.remove()">'+
+    '<div class="block"><h3>À retenir</h3>'+tips(d)+'</div>'+
     '<div class="block"><h3>Matchups liés</h3>'+(rel||'<p>Aucun pour l’instant.</p>')+'</div></div>';
   showPanel();
 }
@@ -112,6 +130,13 @@ function openMatchup(id){
 }
 function showPanel(){ $("panel").hidden=false; $("panel-title").focus({preventScroll:true}); $("panel").scrollIntoView({block:"start", behavior: reduced()?"auto":"smooth"}); }
 function closePanel(){ $("panel").hidden=true; }
+$("panel-body").addEventListener("click", function(e){
+  var b = e.target.closest(".lite-btn"); if(!b) return;
+  var box = b.parentNode, id = box.dataset.yt;
+  if(!/^[A-Za-z0-9_-]{11}$/.test(id)) return;
+  box.innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&rel=0" title="Vidéo : '+box.dataset.title+'" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen referrerpolicy="no-referrer"></iframe>';
+  box.querySelector("iframe").focus();
+});
 
 function pct(m,a){ return a ? Math.round(m/a*100)+" %" : "—"; }
 function today(){ var d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }

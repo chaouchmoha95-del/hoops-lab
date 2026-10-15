@@ -1,0 +1,22 @@
+/* Hoops Lab — médias : vignettes, vidéo, fiches épurées */
+.tile-top{display:flex;align-items:center;gap:10px;width:100%}
+.tile-ico{position:relative;display:inline-grid;place-items:center;width:44px;height:44px;flex:none;border-radius:12px;background:var(--accent-dim);color:var(--accent);overflow:hidden}
+.tile-ico svg{width:24px;height:24px}
+.ico-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.lead{color:var(--text-soft);font-size:15px;line-height:24px;margin-bottom:18px}
+.lite{position:relative;aspect-ratio:16/9;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#000}
+.lite-btn{position:absolute;inset:0;width:100%;height:100%;display:grid;place-items:center;background-color:#10151c;background-size:cover;background-position:center}
+.lite-btn::after{content:"";position:absolute;inset:0;background:rgba(0,0,0,.3);transition:background .2s}
+.lite-btn:hover::after{background:rgba(0,0,0,.12)}
+.lite-play{position:relative;z-index:1;width:72px;height:50px;border-radius:14px;background:var(--accent)}
+.lite-play::before{content:"";position:absolute;left:50%;top:50%;transform:translate(-35%,-50%);border-style:solid;border-width:10px 0 10px 17px;border-color:transparent transparent transparent var(--on-accent)}
+.lite iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.yt-open{display:inline-flex;align-items:center;gap:8px;min-height:44px;margin-top:8px;padding:8px 14px;border:1px solid var(--line);border-radius:6px;font-size:14px;color:var(--text)}
+.yt-open:hover{border-color:var(--accent);color:var(--accent-soft)}
+.yt-open svg{width:18px;height:18px;color:#ff5a5a}
+.cover{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;border:1px solid var(--line);border-radius:8px;margin-bottom:20px}
+.tips{list-style:none;border-top:1px solid var(--line)}
+.tips li{position:relative;padding:11px 0 11px 30px;border-bottom:1px solid var(--line);color:var(--text-soft);font-size:14px}
+.tips li::before{position:absolute;left:0;top:11px;font-weight:700}
+.tips .ok::before{content:"✓";color:var(--ok)}
+.tips .no::before{content:"✕";color:var(--hard)}
