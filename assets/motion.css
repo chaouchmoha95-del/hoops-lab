@@ -1,0 +1,67 @@
+/* Hoops Lab — animations. Désactivées par prefers-reduced-motion (règle globale de style.css + règles ci-dessous). */
+@keyframes fade-in{from{opacity:0}}
+@keyframes fade-up{from{opacity:0;transform:translateY(16px)}}
+@keyframes panel-in{from{opacity:0;transform:translateY(24px)}}
+@keyframes grow{from{width:0}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes splash-out{to{transform:translateY(-100%);visibility:hidden}}
+@keyframes splash-leave{to{transform:translateY(-100%);visibility:hidden}}
+@keyframes ball-bounce{0%{transform:translateY(0) scale(1.14,.86);animation-timing-function:cubic-bezier(.2,.7,.4,1)}15%{transform:translateY(-10px) scale(.97,1.04)}50%{transform:translateY(-84px) scale(1,1);animation-timing-function:cubic-bezier(.6,0,.9,.5)}92%{transform:translateY(-4px) scale(1,1)}100%{transform:translateY(0) scale(1.14,.86)}}
+@keyframes ball-shadow{0%,100%{transform:scaleX(1);opacity:.55}50%{transform:scaleX(.45);opacity:.2}}
+@keyframes blink{0%,92%,100%{transform:scaleY(1)}96%{transform:scaleY(.1)}}
+@keyframes track-in{from{opacity:0;letter-spacing:.55em}}
+@keyframes load-in{from{opacity:0;transform:translateY(6px)}}
+
+/* Écran d'ouverture / chargement : le ballon rebondit tant que la page n'est pas prête */
+.splash{position:fixed;inset:0;z-index:100;display:grid;place-items:center;background:var(--bg);pointer-events:none;animation:splash-out .6s cubic-bezier(.7,0,.3,1) 8s forwards}
+.splash.done{animation:splash-leave .6s cubic-bezier(.7,0,.3,1) forwards}
+.no-splash .splash{display:none}
+.splash-inner{display:flex;flex-direction:column;align-items:center;gap:4px}
+.splash-ball{width:96px;height:96px;margin-top:20px;overflow:visible;transform-origin:50% 100%;animation:ball-bounce .9s linear infinite}
+.splash-ball .eye{transform-box:fill-box;transform-origin:center;animation:blink 3.2s infinite}
+.splash-shadow{width:76px;height:10px;border-radius:50%;background:#000;filter:blur(4px);animation:ball-shadow .9s linear infinite}
+.splash-name{margin-top:14px;font-family:var(--font-display);font-weight:700;font-size:20px;letter-spacing:.2em;text-transform:uppercase;color:var(--text);animation:track-in .7s ease .3s backwards}
+.splash-load{font-size:13px;color:var(--muted);letter-spacing:.08em;animation:load-in .5s ease 2.4s backwards}
+
+/* Onglets : indicateur qui glisse */
+.tabs{position:relative}
+.tab-ink{position:absolute;left:0;bottom:0;height:3px;width:var(--w,0);background:var(--accent);transform:translateX(var(--x,0)) skewX(-8deg);opacity:0;pointer-events:none;transition:transform .38s cubic-bezier(.65,0,.35,1),width .38s cubic-bezier(.65,0,.35,1),opacity .2s}
+.tabs.ink-on .tab-ink{opacity:1}
+.tabs.ink-on .tab[aria-current="true"]::after{display:none}
+.tab{transition:color .2s}
+
+/* Changement de vue */
+main>section[id^="view-"]:not([hidden]){animation:fade-in .32s ease}
+.panel:not([hidden]){animation:panel-in .42s cubic-bezier(.2,.7,.2,1)}
+body.enter .tile,body.enter .stat,body.enter .session,body.enter .tform{animation:fade-up .5s cubic-bezier(.2,.7,.2,1) backwards}
+body.enter .bar>span{animation:grow .9s cubic-bezier(.2,.7,.2,1) .25s backwards}
+body.enter .tile:nth-child(1){animation-delay:0ms}
+body.enter .tile:nth-child(2){animation-delay:35ms}
+body.enter .tile:nth-child(3){animation-delay:70ms}
+body.enter .tile:nth-child(4){animation-delay:105ms}
+body.enter .tile:nth-child(5){animation-delay:140ms}
+body.enter .tile:nth-child(6){animation-delay:175ms}
+body.enter .tile:nth-child(7){animation-delay:210ms}
+body.enter .tile:nth-child(8){animation-delay:245ms}
+body.enter .tile:nth-child(9){animation-delay:280ms}
+body.enter .tile:nth-child(10){animation-delay:315ms}
+body.enter .tile:nth-child(11){animation-delay:350ms}
+body.enter .tile:nth-child(12){animation-delay:385ms}
+body.enter .tile:nth-child(n+13){animation-delay:420ms}
+body.enter .session:nth-child(2),body.enter .stat:nth-child(2){animation-delay:70ms}
+body.enter .session:nth-child(3),body.enter .stat:nth-child(3){animation-delay:140ms}
+body.enter .session:nth-child(4),body.enter .stat:nth-child(4){animation-delay:210ms}
+
+/* En-tête qui prend de l'ombre au défilement */
+.topbar{transition:box-shadow .25s}
+.topbar.scrolled{box-shadow:0 10px 26px -18px rgba(0,0,0,.9)}
+
+/* Micro-interactions (uniquement si le mouvement est autorisé) */
+@media (prefers-reduced-motion:no-preference){
+  .tile{transition:border-color 140ms,transform .22s cubic-bezier(.2,.7,.2,1),box-shadow .22s}
+  .tile:hover{transform:translateY(-3px);box-shadow:0 14px 28px -16px rgba(0,0,0,.85)}
+  .tile:active,.fchip:active,.primary:active,.link-drill:active{transform:scale(.97)}
+  .fchip,.primary,.link-drill{transition:border-color 140ms,background-color 140ms,transform .15s}
+  .brand:hover .brand-ball{animation:spin .8s cubic-bezier(.3,.7,.3,1)}
+}
+@media (prefers-reduced-motion:reduce){.splash{display:none}}

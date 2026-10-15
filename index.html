@@ -12,9 +12,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
   <noscript><link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
   <script>try{var t=localStorage.getItem("hoops-theme");if(t==="ice")document.documentElement.setAttribute("data-theme","ice")}catch(e){}</script>
+  <script>try{if(sessionStorage.getItem("hoops-splash")){document.documentElement.classList.add("no-splash")}else{sessionStorage.setItem("hoops-splash","1")}}catch(e){}</script>
   <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/motion.css">
 </head>
 <body>
+  <div class="splash" aria-hidden="true"><div class="splash-inner"><svg class="splash-ball" viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="#ff8a1f" stroke="#1b0f05" stroke-width="5"/><path d="M50 6V94M6 50H94" stroke="#1b0f05" stroke-width="4" stroke-linecap="round"/><path d="M19 19C36 33 36 67 19 81M81 19C64 33 64 67 81 81" stroke="#1b0f05" stroke-width="4" fill="none" stroke-linecap="round"/><ellipse cx="32" cy="29" rx="9" ry="5" fill="#fff" opacity=".5" transform="rotate(-35 32 29)"/><g class="eye"><ellipse cx="38" cy="45" rx="6" ry="8" fill="#fff" stroke="#1b0f05" stroke-width="2.5"/><circle cx="40" cy="47" r="3.2" fill="#1b0f05"/></g><g class="eye"><ellipse cx="62" cy="45" rx="6" ry="8" fill="#fff" stroke="#1b0f05" stroke-width="2.5"/><circle cx="64" cy="47" r="3.2" fill="#1b0f05"/></g><path d="M39 63Q50 74 61 63" fill="#fff" stroke="#1b0f05" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/></svg><div class="splash-shadow"></div><div class="splash-name">Hoops Lab</div><div class="splash-load">Chargement…</div></div></div>
   <a class="skip" href="#main" onclick="event.preventDefault();document.getElementById('main').focus()">Aller au contenu</a>
   <header class="topbar">
     <div class="topbar-row shell">
@@ -108,5 +111,6 @@
   <noscript><p class="noscript">Ce site a besoin de JavaScript pour afficher les drills.</p></noscript>
   <script src="assets/data.js"></script>
   <script src="assets/app.js"></script>
+  <script src="assets/motion.js"></script>
 </body>
 </html>
